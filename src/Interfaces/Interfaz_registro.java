@@ -92,6 +92,7 @@ public class Interfaz_registro extends javax.swing.JFrame {
                 cerrar.setBackground(nuevoColor);
                 cargar.setBackground(nuevoColor);
                 color.setBackground(nuevoColor);
+                System.out.println("");
             }
         });
 
