@@ -27,7 +27,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author tomas Chatubi
+ * @author tomas Charubi
  */
 public class Interfaz_registro extends javax.swing.JFrame {
 
