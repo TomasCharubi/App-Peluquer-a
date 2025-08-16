@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package Interfaces;
 
 import Almacenamiento.Lseo;
@@ -30,7 +27,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author tomas
+ * @author tomas Chatubi
  */
 public class Interfaz_registro extends javax.swing.JFrame {
 
@@ -77,7 +74,6 @@ public class Interfaz_registro extends javax.swing.JFrame {
             hora.setText("" + hora_nuevo);
         });
         timer.start();
-
     }
 
     // Timer para cambio de color (pausado al inicio)
@@ -92,7 +88,6 @@ public class Interfaz_registro extends javax.swing.JFrame {
                 cerrar.setBackground(nuevoColor);
                 cargar.setBackground(nuevoColor);
                 color.setBackground(nuevoColor);
-                System.out.println("");
             }
         });
 
