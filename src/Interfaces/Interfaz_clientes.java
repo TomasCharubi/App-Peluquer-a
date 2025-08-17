@@ -17,7 +17,7 @@ import javax.swing.WindowConstants;
 
 /**
  *
- * @author tomas
+ * @author tomas Charubi
  */
 public class Interfaz_clientes extends javax.swing.JFrame {
 

@@ -1,9 +1,10 @@
 package Interfaces;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -11,12 +12,21 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
+import javazoom.jl.player.Player;
+import java.io.FileInputStream;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComboBox;
+import javax.swing.JList;
 
 /**
  *
  * @author tomas charubi
  */
 public class Interfaz_principal extends javax.swing.JFrame {
+
+    Clip fondoClip;
+    private Player currentPlayer;
 
     public Interfaz_principal() {
         setWindowIcon();//Llamo al metodo que coloca el icono
@@ -35,7 +45,7 @@ public class Interfaz_principal extends javax.swing.JFrame {
         SetImageLabel(jLabel4, "/Imagenes/20250727_161058.png");
         SetImageLabel(jLabel6, "/Imagenes/20250727_160941.png");
         SetImageLabel(jLabel7, "/Imagenes/20250727_161027.png");
-        SetImageLabel(jLabel10, "/Imagenes/20250728_152929.png");
+        // SetImageLabel(jLabel10, "/Imagenes/20250728_152929.png");
         SetImageLabel(jLabel11, "/Imagenes/20250728_152929.png");
         //Agrego la animacion a los botones
         aplicarEfectoHoverMouse(boton_registro);
@@ -46,6 +56,29 @@ public class Interfaz_principal extends javax.swing.JFrame {
         SetImagebutton(boton_clientes, "/Imagenes/20250727_164917.png");
         SetImagebutton(boton_registro, "/Imagenes/20250727_164559.png");
         SetImagebutton(boton_cerrar, "/Imagenes/1753729881840.png");
+        //Doy la respectiva musica a cada item
+        jComboBox1.addActionListener(e -> {
+            int index = jComboBox1.getSelectedIndex();
+            switch (index) {
+                case 0:
+                    playMusicMP3("src/Musica/indio.mp3");
+                    break;
+                case 1:
+                    playMusicMP3("src/Musica/prueba.mp3");
+                    break;
+                case 2:
+                    playMusicMP3("src/Musica/coldplay.mp3");
+                    break;
+            }
+        });
+        // Cargamos las imágenes al JcomboBox
+        String[] imagenes = {
+            "/Imagenes/20250817_172707.png",
+            "/imagenes/20250817_172731.png",
+            "/imagenes/20250817_172750.png"
+        };
+        setImageJComboBox(jComboBox1, imagenes);
+
     }
 
     //Metodo que coloca icono a la app.
@@ -83,8 +116,39 @@ public class Interfaz_principal extends javax.swing.JFrame {
             System.err.println("No se pudo encontrar la imagen: " + resourcePath);
         }
     }
-    // Ejemplo de efecto hover para un JButton
 
+    //Este metodo sirve para asignar una imagen a un jComboBox
+    private void setImageJComboBox(JComboBox comboBox, String[] resourcePaths) {
+        DefaultComboBoxModel<ImageIcon> model = new DefaultComboBoxModel<>();
+
+        for (String resourcePath : resourcePaths) {
+            java.net.URL imgURL = getClass().getResource(resourcePath);
+            if (imgURL != null) {
+                ImageIcon icon = new ImageIcon(imgURL);
+                Image scaledImage = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+                model.addElement(new ImageIcon(scaledImage));
+            } else {
+                System.err.println("No se pudo encontrar la imagen: " + resourcePath);
+            }
+        }
+
+        comboBox.setModel(model);
+
+        comboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                    boolean isSelected, boolean cellHasFocus) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof ImageIcon) {
+                    label.setIcon((ImageIcon) value);
+                    label.setText("¡Sube el Volumen!");
+                }
+                return label;
+            }
+        });
+    }
+
+    // Ejemplo de efecto hover para un JButton
     private void aplicarEfectoHoverMouse(JButton boton) {
         Color colorBordeNormal = Color.BLACK; // Color inicial del borde
         Color colorBordeHover = Color.YELLOW; // Color al pasar el mouse
@@ -109,6 +173,23 @@ public class Interfaz_principal extends javax.swing.JFrame {
         });
     }
 
+    //Agrego musica y detengo la anterior si lo hay.
+    public void playMusicMP3(String filename) {
+        // Detener la música anterior si está sonando
+        if (currentPlayer != null) {
+            currentPlayer.close();
+        }
+        new Thread(() -> {
+            try {
+                FileInputStream fis = new FileInputStream(filename);
+                currentPlayer = new Player(fis);
+                currentPlayer.play();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -127,9 +208,9 @@ public class Interfaz_principal extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         boton_cerrar = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -185,6 +266,8 @@ public class Interfaz_principal extends javax.swing.JFrame {
             }
         });
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "musica1", "musica2", "musica3", "musica4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -223,18 +306,22 @@ public class Interfaz_principal extends javax.swing.JFrame {
                             .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addGap(18, 18, 18)
-                        .addComponent(boton_cerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(118, 118, 118))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(134, 134, 134)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(72, 72, 72)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addGap(134, 134, 134))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(18, 18, 18)
+                                .addComponent(boton_cerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(118, 118, 118)))))
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(65, 65, 65))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,12 +356,15 @@ public class Interfaz_principal extends javax.swing.JFrame {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(jLabel8))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(boton_cerrar, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(boton_cerrar, javax.swing.GroupLayout.DEFAULT_SIZE, 93, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel9))
                     .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -337,8 +427,8 @@ public class Interfaz_principal extends javax.swing.JFrame {
     private javax.swing.JButton boton_clientes;
     private javax.swing.JButton boton_registro;
     private javax.swing.JButton boton_turnos;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

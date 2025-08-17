@@ -1,13 +1,11 @@
 package Run;
 
 import Interfaces.Interfaz_ingreso;
-import Interfaces.Interfaz_principal;
 import javax.swing.UIManager;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatDarculaLaf;
-import java.awt.EventQueue;
 import javax.swing.JOptionPane;
 
 public class Clase_principal {
