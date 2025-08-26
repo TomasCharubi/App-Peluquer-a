@@ -14,6 +14,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javazoom.jl.player.Player;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
@@ -61,13 +62,13 @@ public class Interfaz_principal extends javax.swing.JFrame {
             int index = jComboBox1.getSelectedIndex();
             switch (index) {
                 case 0:
-                    playMusicMP3("src/Musica/indio.mp3");
+                    playMusicMP3("/Musica/coldplay.mp3");
                     break;
                 case 1:
-                    playMusicMP3("src/Musica/prueba.mp3");
+                    playMusicMP3("/Musica/indio.mp3");
                     break;
                 case 2:
-                    playMusicMP3("src/Musica/coldplay.mp3");
+                    playMusicMP3("/Musica/prueba.mp3");
                     break;
             }
         });
@@ -174,15 +175,14 @@ public class Interfaz_principal extends javax.swing.JFrame {
     }
 
     //Agrego musica y detengo la anterior si lo hay.
-    public void playMusicMP3(String filename) {
-        // Detener la música anterior si está sonando
+    public void playMusicMP3(String resourcePath) {
         if (currentPlayer != null) {
             currentPlayer.close();
         }
         new Thread(() -> {
             try {
-                FileInputStream fis = new FileInputStream(filename);
-                currentPlayer = new Player(fis);
+                InputStream is = getClass().getResourceAsStream(resourcePath);
+                currentPlayer = new Player(is);
                 currentPlayer.play();
             } catch (Exception e) {
                 e.printStackTrace();
