@@ -331,6 +331,8 @@ public class Interfaz_registro extends javax.swing.JFrame {
             }
         });
 
+        hora.setForeground(java.awt.Color.black);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
